@@ -5,11 +5,11 @@ import plotly.graph_objects as go
 import streamlit as st
 
 # -----------------------------------------------------------------------------
-# PAGE CONFIGURATION & CUSTOM DARK THEME CSS
+# PAGE CONFIGURATION & REALISTIC SOFTWARE THEME
 # -----------------------------------------------------------------------------
 st.set_page_config(
-    page_title="HYDRO-JET | Pelton Turbine Optimization Suite",
-    page_icon="⚡",
+    page_title="HYDRO-JET | Impulse Turbine Analysis Suite",
+    page_icon="⚙️",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -17,82 +17,68 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    /* Dark Theme Background */
+    /* Dark Engineering Theme */
     .stApp {
-        background-color: #0B1329;
-        color: #F8FAFC;
+        background-color: #0F172A;
+        color: #E2E8F0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
     
-    /* Centered Hero Header Box */
-    .hero-container {
-        text-align: center;
-        padding: 35px 20px 25px 20px;
-        background: linear-gradient(180deg, #111C38 0%, #0B1329 100%);
-        border: 1px solid #1E293B;
-        border-radius: 16px;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
-        margin-bottom: 30px;
+    /* Header Bar */
+    .app-header {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        background-color: #1E293B;
+        border: 1px solid #334155;
+        border-radius: 10px;
+        padding: 16px 24px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
-    
-    .hero-title {
-        font-size: 2.8rem;
-        font-weight: 900;
+    .app-header-title {
+        font-size: 1.8rem;
+        font-weight: 800;
         color: #38BDF8;
-        margin-top: 15px;
-        margin-bottom: 8px;
-        letter-spacing: 1.5px;
+        margin: 0;
+        letter-spacing: 0.5px;
         text-transform: uppercase;
-        text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
     }
-    
-    .hero-subtitle {
-        font-size: 1.15rem;
+    .app-header-sub {
+        font-size: 0.95rem;
         color: #94A3B8;
+        margin: 0;
         font-weight: 500;
-        max-width: 850px;
-        margin: 0 auto;
     }
     
-    /* Custom SVG Logo Banner Graphic */
-    .logo-graphic {
-        display: inline-block;
-        width: 140px;
-        height: 140px;
-        margin: 0 auto;
-    }
-    
-    /* Feature Highlight Cards */
+    /* Content Cards */
     .card-box {
-        background-color: #111C38;
-        border: 1px solid #1E293B;
-        border-left: 5px solid #38BDF8;
-        border-radius: 12px;
-        padding: 20px;
+        background-color: #1E293B;
+        border: 1px solid #334155;
+        border-radius: 8px;
+        padding: 18px 22px;
         margin-bottom: 20px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
-    
     .card-title {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         font-weight: 700;
         color: #38BDF8;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
     }
-    
     .card-text {
-        font-size: 0.98rem;
-        color: #E2E8F0;
+        font-size: 0.95rem;
+        color: #CBD5E1;
         line-height: 1.5;
     }
     
-    /* Metric Card Styling Override */
+    /* Metric Cards Override */
     div[data-testid="stMetricValue"] {
-        font-size: 1.8rem !important;
-        font-weight: 800 !important;
+        font-size: 1.6rem !important;
+        font-weight: 700 !important;
         color: #38BDF8 !important;
     }
     div[data-testid="stMetricLabel"] {
-        font-weight: 700 !important;
+        font-weight: 600 !important;
         color: #94A3B8 !important;
     }
     </style>
@@ -102,44 +88,32 @@ st.markdown(
 
 # Constants
 RHO = 1000.0  # Density of water (kg/m3)
-G = 9.81  # Acceleration due to gravity (m/s2)
+G = 9.81  # Gravity acceleration (m/s2)
 
 # -----------------------------------------------------------------------------
-# HERO HEADER WITH EMBEDDED GRAPHIC LOGO
+# MERGED INTEGRATED HEADER WITH LOGO
 # -----------------------------------------------------------------------------
 st.markdown(
     """
-    <div class="hero-container">
-        <svg class="logo-graphic" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Hexagon Shield Outer Frame -->
-            <polygon points="100,10 175,50 175,150 100,190 25,150 25,50" stroke="#38BDF8" stroke-width="6" fill="#0B1329"/>
-            <polygon points="100,20 165,58 165,142 100,180 35,142 35,58" stroke="#1E293B" stroke-width="3" fill="#111C38"/>
-            
-            <!-- Pelton Runner Wheel Bucket Details -->
-            <circle cx="100" cy="100" r="45" stroke="#38BDF8" stroke-width="5" stroke-dasharray="12 8"/>
-            <circle cx="100" cy="100" r="22" stroke="#0284C7" stroke-width="4"/>
-            <circle cx="100" cy="100" r="8" fill="#38BDF8"/>
-            
-            <!-- High-Pressure Water Jet Spray -->
-            <path d="M 20 160 C 50 150, 70 120, 95 105" stroke="#0284C7" stroke-width="12" stroke-linecap="round"/>
-            <path d="M 25 170 C 55 160, 75 130, 100 115" stroke="#38BDF8" stroke-width="6" stroke-linecap="round"/>
-            
-            <!-- Electric Power Lightning Bolt -->
-            <polygon points="110,40 85,95 105,95 80,150 125,85 102,85" fill="#F59E0B" stroke="#FDE047" stroke-width="1.5"/>
-            
-            <!-- Performance Characteristic Curve Overlay -->
-            <path d="M 50 130 Q 100 60 150 110" stroke="#F59E0B" stroke-width="5" fill="none" stroke-linecap="round"/>
-            <polygon points="150,110 142,102 144,115" fill="#F59E0B"/>
+    <div class="app-header">
+        <svg width="52" height="52" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="46" fill="#0F172A" stroke="#38BDF8" stroke-width="4"/>
+            <circle cx="50" cy="50" r="28" stroke="#0284C7" stroke-width="4" stroke-dasharray="8 4"/>
+            <circle cx="50" cy="50" r="10" fill="#38BDF8"/>
+            <path d="M 12 75 C 30 70, 40 55, 50 50" stroke="#38BDF8" stroke-width="6" stroke-linecap="round"/>
+            <path d="M 50 15 L 50 25 M 85 50 L 75 50 M 50 85 L 50 75 M 15 50 L 25 50" stroke="#F59E0B" stroke-width="4" stroke-linecap="round"/>
         </svg>
-        <div class="hero-title">HYDRO-JET OPTIMIZER</div>
-        <div class="hero-subtitle">Interactive Pelton Impulse Turbine Simulator & Renewable Hydro-Power Analytics Suite</div>
+        <div>
+            <div class="app-header-title">HYDRO-JET OPTIMIZER</div>
+            <div class="app-header-sub">Fluid Dynamics Performance Analysis & Hydro-Turbine Simulation Platform</div>
+        </div>
     </div>
 """,
     unsafe_allow_html=True,
 )
 
 # Sidebar Navigation Menu
-st.sidebar.markdown("### 🎛️ Navigation Menu")
+st.sidebar.markdown("### 🎛️ System Navigation")
 nav_choice = st.sidebar.radio(
     "Select Interface Section:",
     [
@@ -157,9 +131,9 @@ nav_choice = st.sidebar.radio(
 # SECTION 1: PLATFORM OVERVIEW
 # =============================================================================
 if nav_choice == "Platform Overview":
-    st.markdown("### What This Application Helps You Achieve")
+    st.markdown("### Application Capabilities & Workflow")
     st.write(
-        "HYDRO-JET is a professional fluid mechanics simulation software designed to model, analyze, and optimize Pelton impulse hydro-turbines."
+        "HYDRO-JET provides engineering calculations and real-time numerical modeling for Pelton impulse hydro-turbines."
     )
 
     st.write("")
@@ -170,8 +144,8 @@ if nav_choice == "Platform Overview":
         st.markdown(
             """
         <div class="card-box">
-            <div class="card-title">1. Automated Experimental Data Processing</div>
-            <div class="card-text">Input raw physical measurements from your testing rig (RPM, spring balance weights, water volume, collection time, inlet pressure). The platform instantly computes net brake forces, volumetric flow rates, brake torque, shaft power, and overall conversion efficiency.</div>
+            <div class="card-title">1. Automated Laboratory Data Processing</div>
+            <div class="card-text">Processes physical readings (tachometer speed, spring balance loads, water collection volume, and inlet pressure) to compute net brake force, volumetric flow rate, torque, shaft power, and overall conversion efficiency.</div>
         </div>
         """,
             unsafe_allow_html=True,
@@ -180,8 +154,8 @@ if nav_choice == "Platform Overview":
         st.markdown(
             """
         <div class="card-box">
-            <div class="card-title">2. Real-Time Nozzle & Speed Optimization</div>
-            <div class="card-text">Adjust head pressure, nozzle diameter, runner pitch diameter, and velocity coefficients via live controls. The app automatically plots efficiency curves and calculates your Best Efficiency Point (BEP).</div>
+            <div class="card-title">2. Hydrodynamic Nozzle & Speed Optimizer</div>
+            <div class="card-text">Simulates operating head, nozzle diameter, pitch diameter, and jet coefficients to determine peak efficiency points and optimal speed ratios.</div>
         </div>
         """,
             unsafe_allow_html=True,
@@ -191,8 +165,8 @@ if nav_choice == "Platform Overview":
         st.markdown(
             """
         <div class="card-box">
-            <div class="card-title">3. Comprehensive Characteristic Curves</div>
-            <div class="card-text">Visualize multi-graph interactions including Brake Power vs. Efficiency, Torque vs. RPM, and Shaft Power across speed ratios under variable heads and nozzle geometries.</div>
+            <div class="card-title">3. Characteristic Performance Curves</div>
+            <div class="card-text">Generates interactive plots including Power vs. Efficiency, Torque vs. RPM, and multi-head parametric curves.</div>
         </div>
         """,
             unsafe_allow_html=True,
@@ -201,8 +175,8 @@ if nav_choice == "Platform Overview":
         st.markdown(
             """
         <div class="card-box">
-            <div class="card-title">4. Green Energy & Carbon Savings Estimation</div>
-            <div class="card-text">Translate turbine power output into clean electricity potential. Evaluate how micro-hydro installations replace fossil-fuel power generation and calculate estimated metric tons of CO₂ offset per year.</div>
+            <div class="card-title">4. Renewable Energy Impact Modeling</div>
+            <div class="card-text">Calculates estimated annual electrical energy yields and carbon emission offsets for run-of-river micro-hydro installations.</div>
         </div>
         """,
             unsafe_allow_html=True,
@@ -215,7 +189,7 @@ if nav_choice == "Platform Overview":
 elif nav_choice == "Laboratory Data Calculator":
     st.title("Physical Test Data Calculator")
     st.write(
-        "Enter physical test measurements from your experimental bench setup to compute efficiency and power values."
+        "Input measured experimental parameters to calculate turbine performance metrics."
     )
 
     st.write("")
@@ -228,7 +202,7 @@ elif nav_choice == "Laboratory Data Calculator":
             value=0.030,
             step=0.005,
             format="%.3f",
-            help="Radius of drum on which brake band operates",
+            help="Measured radius of drum",
         )
         rpm_in = st.number_input(
             "Tachometer Speed (RPM)", value=750.0, step=10.0
@@ -295,7 +269,7 @@ elif nav_choice == "Laboratory Data Calculator":
 elif nav_choice == "Interactive Turbine Simulator":
     st.title("Interactive Turbine & Jet Simulator")
 
-    st.sidebar.markdown("### ⚙️ Live Operating Controls")
+    st.sidebar.markdown("### ⚙️ Operating Variables")
     s_head = st.sidebar.slider("Net Inlet Head, H (m)", 10.0, 120.0, 45.0, 1.0)
     s_cv = st.sidebar.slider("Velocity Coefficient, Cv", 0.90, 0.99, 0.97, 0.01)
     s_d_nozzle = (
@@ -345,7 +319,7 @@ elif nav_choice == "Interactive Turbine Simulator":
                 y=eta_sim,
                 mode="lines",
                 name="Efficiency (%)",
-                line=dict(color="#38BDF8", width=4),
+                line=dict(color="#38BDF8", width=3.5),
             )
         )
         fig.add_trace(
@@ -356,16 +330,16 @@ elif nav_choice == "Interactive Turbine Simulator":
                 name="BEP Point",
                 text=[f"  BEP ({opt_phi:.2f}, {opt_eta:.1f}%)"],
                 textposition="top right",
-                marker=dict(color="#F43F5E", size=14, symbol="star"),
+                marker=dict(color="#F43F5E", size=12, symbol="star"),
             )
         )
         fig.update_layout(
-            title="Turbine Efficiency vs. Speed Ratio (ϕ)",
+            title="Overall Efficiency vs. Speed Ratio (ϕ)",
             xaxis_title="Speed Ratio (ϕ = u / Vj)",
             yaxis_title="Overall Efficiency (%)",
             template="plotly_dark",
-            paper_bgcolor="#111C38",
-            plot_bgcolor="#111C38",
+            paper_bgcolor="#1E293B",
+            plot_bgcolor="#1E293B",
             height=420,
         )
         st.plotly_chart(fig, use_container_width=True)
@@ -374,7 +348,7 @@ elif nav_choice == "Interactive Turbine Simulator":
         st.markdown(
             f"""
         <div class="card-box">
-            <div class="card-title">Optimal BEP Summary</div>
+            <div class="card-title">Optimal Operating Point (BEP)</div>
             <div class="card-text">
                 • <b>Optimum Speed Ratio (ϕ):</b> {opt_phi:.2f}<br>
                 • <b>Recommended Speed:</b> {opt_rpm:.0f} RPM<br>
@@ -393,11 +367,11 @@ elif nav_choice == "Interactive Turbine Simulator":
             names=["Useful Power", "Hydraulic Loss", "Mechanical Loss"],
             values=[opt_pmech, loss_hyd, loss_mech],
             color_discrete_sequence=["#10B981", "#F43F5E", "#F59E0B"],
-            title="Energy Loss Distribution at BEP",
+            title="Energy Distribution at BEP",
         )
         fig_pie.update_layout(
             template="plotly_dark",
-            paper_bgcolor="#111C38",
+            paper_bgcolor="#1E293B",
             height=250,
             margin=dict(t=30, b=10, l=10, r=10),
         )
@@ -405,15 +379,15 @@ elif nav_choice == "Interactive Turbine Simulator":
 
 
 # =============================================================================
-# SECTION 4: PERFORMANCE CURVES & ANALYTICS (NEW DETAILED PLOTS)
+# SECTION 4: PERFORMANCE CURVES & ANALYTICS
 # =============================================================================
 elif nav_choice == "Performance Curves & Analytics":
-    st.title("📈 Performance Characteristic Curves & Analytics")
+    st.title("Performance Curves & Parametric Analytics")
     st.write(
-        "Analyze multi-variable relationships governing Pelton turbine operation, including Brake Power vs. Efficiency, Torque vs. Speed, and Head Sensitivity."
+        "Analyze relationships between brake power, rotational speed, torque, and efficiency under varying conditions."
     )
 
-    st.sidebar.markdown("### ⚙️ Operating Baseline")
+    st.sidebar.markdown("### ⚙️ Baseline Settings")
     p_head = st.sidebar.slider("Net Head, H (m)", 10.0, 100.0, 45.0, 5.0)
     p_d_nozzle = (
         st.sidebar.slider("Nozzle Diameter, d (mm)", 10.0, 50.0, 24.0, 2.0)
@@ -425,7 +399,7 @@ elif nav_choice == "Performance Curves & Analytics":
 
     v_j = 0.97 * np.sqrt(2 * G * p_head)
     q_val = (np.pi / 4.0) * (p_d_nozzle**2) * v_j
-    p_hyd_val = RHO * G * q_val * p_head  # Watts
+    p_hyd_val = RHO * G * q_val * p_head
 
     phi_arr = np.linspace(0.05, 0.90, 80)
     u_arr = phi_arr * v_j
@@ -433,7 +407,7 @@ elif nav_choice == "Performance Curves & Analytics":
 
     p_brake_arr = (
         RHO * q_val * u_arr * (v_j - u_arr) * (1 + 0.90 * 0.96) * 0.92
-    )  # Watts
+    )
     eff_arr = (p_brake_arr / p_hyd_val) * 100.0
     torque_arr = p_brake_arr / (2 * np.pi * (rpm_arr / 60.0))
 
@@ -446,19 +420,18 @@ elif nav_choice == "Performance Curves & Analytics":
             go.Scatter(
                 x=p_brake_arr / 1000.0,
                 y=eff_arr,
-                mode="lines+markers",
+                mode="lines",
                 name="Efficiency vs. Power",
-                line=dict(color="#10B981", width=3.5),
-                marker=dict(size=5),
+                line=dict(color="#10B981", width=3),
             )
         )
         fig_bp_eff.update_layout(
-            title="Brake Power (kW) vs. Overall Efficiency (%)",
-            xaxis_title="Brake Power Output (kW)",
+            title="Brake Power Output (kW) vs. Efficiency (%)",
+            xaxis_title="Brake Power (kW)",
             yaxis_title="Overall Efficiency (%)",
             template="plotly_dark",
-            paper_bgcolor="#111C38",
-            plot_bgcolor="#111C38",
+            paper_bgcolor="#1E293B",
+            plot_bgcolor="#1E293B",
             height=380,
         )
         st.plotly_chart(fig_bp_eff, use_container_width=True)
@@ -471,16 +444,16 @@ elif nav_choice == "Performance Curves & Analytics":
                 y=torque_arr,
                 mode="lines",
                 name="Torque (N·m)",
-                line=dict(color="#F59E0B", width=3.5),
+                line=dict(color="#F59E0B", width=3),
             )
         )
         fig_torque.update_layout(
-            title="Brake Torque (N·m) vs. Rotational Speed (RPM)",
-            xaxis_title="Runner Rotational Speed (RPM)",
-            yaxis_title="Brake Torque (N·m)",
+            title="Brake Torque (N·m) vs. Speed (RPM)",
+            xaxis_title="Rotational Speed (RPM)",
+            yaxis_title="Torque (N·m)",
             template="plotly_dark",
-            paper_bgcolor="#111C38",
-            plot_bgcolor="#111C38",
+            paper_bgcolor="#1E293B",
+            plot_bgcolor="#1E293B",
             height=380,
         )
         st.plotly_chart(fig_torque, use_container_width=True)
@@ -494,21 +467,21 @@ elif nav_choice == "Performance Curves & Analytics":
                 y=p_brake_arr / 1000.0,
                 mode="lines",
                 name="Brake Power (kW)",
-                line=dict(color="#38BDF8", width=3.5),
+                line=dict(color="#38BDF8", width=3),
             )
         )
         fig_bp_rpm.update_layout(
-            title="Brake Power (kW) vs. Rotational Speed (RPM)",
-            xaxis_title="Runner Rotational Speed (RPM)",
-            yaxis_title="Brake Power Output (kW)",
+            title="Brake Power Output (kW) vs. Speed (RPM)",
+            xaxis_title="Rotational Speed (RPM)",
+            yaxis_title="Brake Power (kW)",
             template="plotly_dark",
-            paper_bgcolor="#111C38",
-            plot_bgcolor="#111C38",
+            paper_bgcolor="#1E293B",
+            plot_bgcolor="#1E293B",
             height=380,
         )
         st.plotly_chart(fig_bp_rpm, use_container_width=True)
 
-        # 4. Multi-Head Parametric Comparison (Power curves across Heads)
+        # 4. Multi-Head Parametric Comparison
         fig_heads = go.Figure()
         heads_test = [20.0, 35.0, 50.0, 65.0]
         for h_t in heads_test:
@@ -518,17 +491,17 @@ elif nav_choice == "Performance Curves & Analytics":
             rpm_t = (phi_arr * v_t * 60.0) / (np.pi * p_d_runner)
             fig_heads.add_trace(
                 go.Scatter(
-                    x=rpm_t, y=p_b_t, mode="lines", name=f"Head H = {h_t:.0f} m"
+                    x=rpm_t, y=p_b_t, mode="lines", name=f"H = {h_t:.0f} m"
                 )
             )
 
         fig_heads.update_layout(
-            title="Power Curves across Operating Heads (H)",
-            xaxis_title="Runner Rotational Speed (RPM)",
+            title="Brake Power Output across Net Heads (H)",
+            xaxis_title="Rotational Speed (RPM)",
             yaxis_title="Brake Power (kW)",
             template="plotly_dark",
-            paper_bgcolor="#111C38",
-            plot_bgcolor="#111C38",
+            paper_bgcolor="#1E293B",
+            plot_bgcolor="#1E293B",
             height=380,
         )
         st.plotly_chart(fig_heads, use_container_width=True)
@@ -538,10 +511,9 @@ elif nav_choice == "Performance Curves & Analytics":
 # SECTION 5: GREEN ENERGY & CARBON IMPACT
 # =============================================================================
 elif nav_choice == "Green Energy & Carbon Impact":
-    st.title("🌱 Green Energy & Clean Hydro-Power Impact")
-
+    st.title("Green Energy & Carbon Impact")
     st.write(
-        "High-head Pelton impulse turbines play a central role in micro and mini **run-of-river hydro schemes**, generating zero-emission electricity without large dams."
+        "Evaluation of Pelton impulse turbines in micro-hydro installations for zero-emission clean power generation."
     )
 
     st.write("")
@@ -552,8 +524,8 @@ elif nav_choice == "Green Energy & Carbon Impact":
         st.markdown(
             """
         <div class="card-box">
-            <div class="card-title">Greenhouse Gas Reduction</div>
-            <div class="card-text">Every kilowatt-hour generated by optimizing Pelton turbine efficiency offsets fossil-fuel generation from coal or gas power plants.</div>
+            <div class="card-title">Clean Electricity Generation</div>
+            <div class="card-text">High-head micro-hydro plants provide predictable renewable baseload power with minimal land footprint.</div>
         </div>
         """,
             unsafe_allow_html=True,
@@ -564,10 +536,10 @@ elif nav_choice == "Green Energy & Carbon Impact":
             value=25.0,
             step=5.0,
         )
-        annual_kwh = est_power_kw * 24 * 365 * 0.70  # 70% capacity factor
+        annual_kwh = est_power_kw * 24 * 365 * 0.70
         co2_saved_tons = (annual_kwh * 0.82) / 1000.0
 
-        st.info(f"⚡ **Annual Clean Electricity:** `{annual_kwh:,.0f} kWh/year`")
+        st.info(f"⚡ **Annual Generation:** `{annual_kwh:,.0f} kWh/year`")
         st.success(
             f"🌿 **Estimated CO₂ Offset:** `{co2_saved_tons:,.1f} Metric Tons CO₂/year`"
         )
@@ -576,8 +548,8 @@ elif nav_choice == "Green Energy & Carbon Impact":
         st.markdown(
             """
         <div class="card-box">
-            <div class="card-title">Grid Stability & Fast Response</div>
-            <div class="card-text">Pelton turbines feature instant start-up and precise needle-valve control, making them essential for balancing fluctuating solar and wind power grids.</div>
+            <div class="card-title">Run-of-River Hydro Schemes</div>
+            <div class="card-text">Pelton turbines allow power extraction from mountain streams without constructing massive storage reservoirs, preserving river ecosystems.</div>
         </div>
         """,
             unsafe_allow_html=True,
@@ -588,9 +560,9 @@ elif nav_choice == "Green Energy & Carbon Impact":
 # SECTION 6: GOVERNING FORMULAS REFERENCE
 # =============================================================================
 elif nav_choice == "Governing Formulas Reference":
-    st.title("Formulas, Symbols & Definitions Table")
+    st.title("Formulas, Symbols & Definitions Reference")
     st.write(
-        "Comprehensive reference table for parameters, units, and symbols used in Pelton turbine calculations."
+        "Standard definitions and unit reference table for Pelton turbine calculations."
     )
 
     formula_data = [

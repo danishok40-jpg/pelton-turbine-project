@@ -9,109 +9,22 @@ import streamlit as st
 # -----------------------------------------------------------------------------
 st.set_page_config(
     page_title="Pelton Turbine Performance & Optimizer",
-    page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
-)
-
-# Custom Styling for Vibrant High-Contrast Light Mode
-st.markdown(
-    """
-    <style>
-    /* Main Background & Text Setup */
-    .stApp {
-        background-color: #F8FAFC;
-        color: #0F172A;
-    }
-    
-    /* Headers Styling */
-    h1 {
-        color: #1E3A8A !important;
-        font-weight: 800 !important;
-        font-size: 2.3rem !important;
-    }
-    h2, h3 {
-        color: #0369A1 !important;
-        font-weight: 700 !important;
-    }
-    
-    /* Welcome Hero Banner */
-    .hero-box {
-        background: linear-gradient(135deg, #1E3A8A 0%, #0284C7 100%);
-        color: #FFFFFF;
-        padding: 28px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        margin-bottom: 25px;
-    }
-    .hero-title {
-        font-size: 2.1rem;
-        font-weight: 800;
-        color: #FFFFFF !important;
-        margin-bottom: 8px;
-    }
-    .hero-sub {
-        font-size: 1.15rem;
-        color: #E0F2FE;
-        font-weight: 500;
-    }
-    
-    /* Content Cards */
-    .feature-card {
-        background-color: #FFFFFF;
-        border-left: 6px solid #0284C7;
-        border-radius: 8px;
-        padding: 18px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        margin-bottom: 15px;
-    }
-    
-    /* High Contrast Metrics */
-    div[data-testid="stMetricValue"] {
-        font-size: 1.8rem !important;
-        font-weight: 800 !important;
-        color: #0F172A !important;
-    }
-    div[data-testid="stMetricLabel"] {
-        font-weight: 700 !important;
-        color: #334155 !important;
-        font-size: 0.95rem !important;
-    }
-    
-    /* Tab Headers Styling */
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
-    }
-    .stTabs [data-baseweb="tab"] {
-        font-weight: 700 !important;
-        font-size: 1rem !important;
-        padding: 12px 20px !important;
-        background-color: #E2E8F0 !important;
-        border-radius: 8px 8px 0 0 !important;
-        color: #334155 !important;
-    }
-    .stTabs [aria-selected="true"] {
-        background-color: #0284C7 !important;
-        color: #FFFFFF !important;
-    }
-    </style>
-""",
-    unsafe_allow_html=True,
 )
 
 # Constants
 RHO = 1000.0  # Water density (kg/m3)
 G = 9.81  # Acceleration due to gravity (m/s2)
-DEFAULT_R = 0.030  # Radius of brake drum (m) from lab formula sheet
 
 # -----------------------------------------------------------------------------
-# MAIN NAVIGATION TABS
+# MAIN NAVIGATION TABS (Clean, Fully Visible Labels)
 # -----------------------------------------------------------------------------
 tab_welcome, tab_lab, tab_sim, tab_theory = st.tabs([
-    "🏠 Welcome & Overview",
-    "📝 Laboratory Data Calculator",
-    "⚙️ Interactive Nozzle & Speed Optimizer",
-    "📖 Governing Formulas & Theory",
+    "Welcome & Overview",
+    "Laboratory Data Calculator",
+    "Nozzle & Speed Optimizer",
+    "Governing Formulas & Theory",
 ])
 
 
@@ -119,76 +32,65 @@ tab_welcome, tab_lab, tab_sim, tab_theory = st.tabs([
 # TAB 1: WELCOME & LANDING INTERFACE
 # =============================================================================
 with tab_welcome:
-    st.markdown(
-        """
-    <div class="hero-box">
-        <div class="hero-title">🌊 Pelton Impulse Turbine & Nozzle Jet Optimizer</div>
-        <div class="hero-sub">Interactive Hydrodynamics Platform for Experimental Analysis & Performance Optimization</div>
-    </div>
-    """,
-        unsafe_allow_html=True,
+    st.title("Pelton Impulse Turbine & Nozzle Jet Optimizer")
+    st.subheader(
+        "Interactive Hydrodynamics Platform for Experimental Analysis & Performance Optimization"
     )
 
-    st.markdown("### 🎯 What Does This Web Application Help You Do?")
+    st.divider()
+
+    st.markdown("### What Does This Web Application Help You Do?")
     st.write(
         "This application is a complete fluid dynamics software tool designed to bridge physical bench tests with theoretical hydrodynamic modeling."
     )
 
+    st.write("")
+
     col_w1, col_w2 = st.columns(2)
 
     with col_w1:
-        st.markdown(
-            """
-        <div class="feature-card">
-            <h4 style="color: #0284C7; margin-top: 0;">1. Process Physical Lab Test Data</h4>
-            <p><b>Target Use:</b> Enter experimental readings directly from your lab apparatus (tachometer RPM, spring balance forces <i>w₁</i> & <i>w₂</i>, water collection time, inlet pressure).</p>
-            <p><b>Output:</b> Automatically calculates flow rate (<i>Q<sub>v</sub></i>), inlet head (<i>H<sub>i</sub></i>), brake power (<i>P<sub>b</sub></i>), hydraulic power (<i>P<sub>h</sub></i>), and overall efficiency (<i>E<sub>t</sub></i>).</p>
-        </div>
-        """,
-            unsafe_allow_html=True,
+        st.markdown("#### 1. Process Physical Lab Test Data")
+        st.write(
+            "Enter experimental readings directly from your lab apparatus (tachometer RPM, spring balance forces w₁ and w₂, water collection time, inlet pressure)."
+        )
+        st.write(
+            "Automatically calculates flow rate (Qv), inlet head (Hi), brake power (Pb), hydraulic power (Ph), and overall efficiency (Et)."
         )
 
-        st.markdown(
-            """
-        <div class="feature-card">
-            <h4 style="color: #0284C7; margin-top: 0;">2. Interactive Nozzle & Speed Optimization</h4>
-            <p><b>Target Use:</b> Adjust operating head, nozzle diameter, runner diameter, and deflection angles using live sliders.</p>
-            <p><b>Output:</b> Generates real-time efficiency curves, determines the Best Efficiency Point (BEP), and computes optimal speed ratios (<i>ϕ</i>).</p>
-        </div>
-        """,
-            unsafe_allow_html=True,
+        st.write("")
+
+        st.markdown("#### 2. Interactive Nozzle & Speed Optimization")
+        st.write(
+            "Adjust operating head, nozzle diameter, runner diameter, and deflection angles using live sliders."
+        )
+        st.write(
+            "Generates real-time efficiency curves, determines the Best Efficiency Point (BEP), and computes optimal speed ratios (ϕ)."
         )
 
     with col_w2:
-        st.markdown(
-            """
-        <div class="feature-card">
-            <h4 style="color: #0284C7; margin-top: 0;">3. Formula Verification & Reference</h4>
-            <p><b>Target Use:</b> Review governing impulse-momentum equations, unit conversions, and symbol definitions used in standard fluid mechanics experiments.</p>
-            <p><b>Output:</b> Provides complete mathematical derivations and step-by-step definition tables.</p>
-        </div>
-        """,
-            unsafe_allow_html=True,
+        st.markdown("#### 3. Formula Verification & Reference")
+        st.write(
+            "Review governing impulse-momentum equations, unit conversions, and symbol definitions used in standard fluid mechanics experiments."
+        )
+        st.write(
+            "Provides complete mathematical derivations and step-by-step definition tables."
         )
 
-        st.markdown(
-            """
-        <div class="feature-card">
-            <h4 style="color: #0284C7; margin-top: 0;">4. Export & Report Data</h4>
-            <p><b>Target Use:</b> Generate dynamic color plots, loss distribution pie charts, and comparative performance tables for report submissions.</p>
-        </div>
-        """,
-            unsafe_allow_html=True,
+        st.write("")
+
+        st.markdown("#### 4. Export & Report Data")
+        st.write(
+            "Generate dynamic color plots, loss distribution pie charts, and comparative performance tables for report submissions."
         )
 
 
 # =============================================================================
-# TAB 2: LABORATORY DATA CALCULATOR (DIRECT FROM FORMULA SHEET)
+# TAB 2: LABORATORY DATA CALCULATOR (EXACT LAB FORMULAS)
 # =============================================================================
 with tab_lab:
-    st.header("📝 Laboratory Data & Efficiency Calculator")
-    st.markdown(
-        "Enter your physical measurements from the laboratory bench apparatus to compute parameters based on standard experiment formulas."
+    st.header("Laboratory Data & Efficiency Calculator")
+    st.write(
+        "Enter physical measurements from the laboratory bench apparatus to compute parameters based on standard experiment formulas."
     )
 
     st.subheader("1. Experimental Input Parameters")
@@ -229,7 +131,7 @@ with tab_lab:
             "Time to Collect, T (seconds)", value=25.0, step=0.5
         )
 
-    # --- Calculations (According to exact formula sheet) ---
+    # Core Lab Formula Calculations
     N_hz = rpm_in / 60.0  # Rotor speed in Hz
     w1_N = w1_kg * G  # Force 1 in N
     w2_N = w2_kg * G  # Force 2 in N
@@ -238,16 +140,16 @@ with tab_lab:
     v_m3 = vol_liters / 1000.0  # Volume in m3
     q_v = v_m3 / time_sec if time_sec > 0 else 0.0  # Flow rate Qv (m3/s)
 
-    h_i = p_in_N / (RHO * G)  # Inlet head Hi = Pi / (rho * g)
+    h_i = p_in_N / (RHO * G)  # Inlet Head Hi = Pi / (rho * g)
     p_h = RHO * G * h_i * q_v  # Hydraulic Power Ph = rho * g * Hi * Qv
 
     torque = f_b * r_drum  # Torque T = Fb * r
-    p_b = 2 * np.pi * N_hz * torque * 60.0 / 60.0  # Brake power Pb = 2 * pi * N * T
-    # Note: Using Hz: Pb = 2 * pi * N_hz * T
+    p_b = 2 * np.pi * N_hz * torque  # Brake Power Pb = 2 * pi * N * T
 
-    e_t = (p_b / p_h * 100.0) if p_h > 0 else 0.0  # Overall efficiency Et (%)
+    e_t = (p_b / p_h * 100.0) if p_h > 0 else 0.0  # Overall Efficiency Et (%)
 
-    st.markdown("---")
+    st.divider()
+
     st.subheader("2. Calculated Hydrodynamic Results")
 
     res1, res2, res3, res4 = st.columns(4)
@@ -267,7 +169,7 @@ with tab_lab:
 # TAB 3: INTERACTIVE OPTIMIZER & SIMULATOR
 # =============================================================================
 with tab_sim:
-    st.sidebar.header("⚙️ Simulation Inputs")
+    st.sidebar.header("Simulation Inputs")
 
     s_head = st.sidebar.slider("Net Head, H (m)", 10.0, 100.0, 40.0, 1.0)
     s_cv = st.sidebar.slider("Velocity Coeff., Cv", 0.90, 0.99, 0.97, 0.01)
@@ -279,7 +181,7 @@ with tab_sim:
         "Runner Pitch Diameter, D (m)", 0.20, 1.00, 0.40, 0.02
     )
 
-    # Physics calculations
+    # Hydrodynamic calculations
     v_jet = s_cv * np.sqrt(2 * G * s_head)
     a_nozzle = (np.pi / 4.0) * (s_d_nozzle**2)
     q_sim = a_nozzle * v_jet
@@ -300,7 +202,7 @@ with tab_sim:
     opt_pmech = p_mech_sim[bep_idx]
     opt_rpm = rpm_sim_range[bep_idx]
 
-    st.header("⚙️ Nozzle Jet & Speed Optimization")
+    st.header("Nozzle Jet & Speed Optimization")
 
     m1, m2, m3, m4 = st.columns(4)
     m1.metric("Jet Velocity (Vj)", f"{v_jet:.2f} m/s")
@@ -308,7 +210,7 @@ with tab_sim:
     m3.metric("Hydraulic Input Power", f"{p_hyd_sim / 1000.0:.2f} kW")
     m4.metric("Max Efficiency (BEP)", f"{opt_eta:.1f} %")
 
-    st.markdown("---")
+    st.divider()
 
     col_chart1, col_chart2 = st.columns([1.6, 1])
 
@@ -346,13 +248,13 @@ with tab_sim:
     with col_chart2:
         st.subheader("Optimal Conditions")
         st.info(f"""
-        * **Optimal Speed Ratio ($\phi$):** `{opt_phi:.2f}`
+        * **Optimal Speed Ratio (ϕ):** `{opt_phi:.2f}`
         * **Recommended Speed:** `{opt_rpm:.0f} RPM`
         * **Optimal Power Output:** `{opt_pmech / 1000.0:.2f} kW`
-        * **Jet Ratio ($D/d$):** `{s_d_runner / s_d_nozzle:.1f}`
+        * **Jet Ratio (D/d):** `{s_d_runner / s_d_nozzle:.1f}`
         """)
 
-        # Losses Breakdown Chart
+        # Power Distribution Pie Chart
         loss_hyd = (p_hyd_sim - opt_pmech) * 0.4
         loss_mech = (p_hyd_sim - opt_pmech) * 0.6
 
@@ -370,8 +272,8 @@ with tab_sim:
 # TAB 4: GOVERNING FORMULAS & THEORY TABLE
 # =============================================================================
 with tab_theory:
-    st.header("📖 Formulas, Symbols & Definitions Reference")
-    st.markdown(
+    st.header("Formulas, Symbols & Definitions Reference")
+    st.write(
         "Below is the exact reference table for all parameters used in the laboratory experiment and software calculations."
     )
 

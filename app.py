@@ -19,48 +19,57 @@ st.markdown(
     <style>
     /* Dark Theme Background */
     .stApp {
-        background-color: #0F172A;
+        background-color: #0B1329;
         color: #F8FAFC;
     }
     
     /* Centered Hero Header Box */
     .hero-container {
         text-align: center;
-        padding: 30px 20px;
-        background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
-        border: 1px solid #334155;
+        padding: 35px 20px 25px 20px;
+        background: linear-gradient(180deg, #111C38 0%, #0B1329 100%);
+        border: 1px solid #1E293B;
         border-radius: 16px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
         margin-bottom: 30px;
     }
     
     .hero-title {
         font-size: 2.8rem;
         font-weight: 900;
-        background: linear-gradient(90deg, #38BDF8 0%, #818CF8 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 10px;
-        letter-spacing: -0.5px;
+        color: #38BDF8;
+        margin-top: 15px;
+        margin-bottom: 8px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        text-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
     }
     
     .hero-subtitle {
-        font-size: 1.25rem;
+        font-size: 1.15rem;
         color: #94A3B8;
         font-weight: 500;
-        max-width: 800px;
+        max-width: 850px;
+        margin: 0 auto;
+    }
+    
+    /* Custom SVG Logo Banner Graphic */
+    .logo-graphic {
+        display: inline-block;
+        width: 140px;
+        height: 140px;
         margin: 0 auto;
     }
     
     /* Feature Highlight Cards */
     .card-box {
-        background-color: #1E293B;
-        border: 1px solid #334155;
+        background-color: #111C38;
+        border: 1px solid #1E293B;
         border-left: 5px solid #38BDF8;
         border-radius: 12px;
         padding: 20px;
         margin-bottom: 20px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
     
     .card-title {
@@ -96,12 +105,32 @@ RHO = 1000.0  # Density of water (kg/m3)
 G = 9.81  # Acceleration due to gravity (m/s2)
 
 # -----------------------------------------------------------------------------
-# CENTERED HERO HEADER & BRANDING
+# HERO HEADER WITH EMBEDDED GRAPHIC LOGO
 # -----------------------------------------------------------------------------
 st.markdown(
     """
     <div class="hero-container">
-        <div style="font-size: 3.5rem; margin-bottom: 5px;">⚡🌊</div>
+        <svg class="logo-graphic" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Hexagon Shield Outer Frame -->
+            <polygon points="100,10 175,50 175,150 100,190 25,150 25,50" stroke="#38BDF8" stroke-width="6" fill="#0B1329"/>
+            <polygon points="100,20 165,58 165,142 100,180 35,142 35,58" stroke="#1E293B" stroke-width="3" fill="#111C38"/>
+            
+            <!-- Pelton Runner Wheel Bucket Details -->
+            <circle cx="100" cy="100" r="45" stroke="#38BDF8" stroke-width="5" stroke-dasharray="12 8"/>
+            <circle cx="100" cy="100" r="22" stroke="#0284C7" stroke-width="4"/>
+            <circle cx="100" cy="100" r="8" fill="#38BDF8"/>
+            
+            <!-- High-Pressure Water Jet Spray -->
+            <path d="M 20 160 C 50 150, 70 120, 95 105" stroke="#0284C7" stroke-width="12" stroke-linecap="round"/>
+            <path d="M 25 170 C 55 160, 75 130, 100 115" stroke="#38BDF8" stroke-width="6" stroke-linecap="round"/>
+            
+            <!-- Electric Power Lightning Bolt -->
+            <polygon points="110,40 85,95 105,95 80,150 125,85 102,85" fill="#F59E0B" stroke="#FDE047" stroke-width="1.5"/>
+            
+            <!-- Performance Characteristic Curve Overlay -->
+            <path d="M 50 130 Q 100 60 150 110" stroke="#F59E0B" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <polygon points="150,110 142,102 144,115" fill="#F59E0B"/>
+        </svg>
         <div class="hero-title">HYDRO-JET OPTIMIZER</div>
         <div class="hero-subtitle">Interactive Pelton Impulse Turbine Simulator & Renewable Hydro-Power Analytics Suite</div>
     </div>
@@ -117,6 +146,7 @@ nav_choice = st.sidebar.radio(
         "Platform Overview",
         "Laboratory Data Calculator",
         "Interactive Turbine Simulator",
+        "Performance Curves & Analytics",
         "Green Energy & Carbon Impact",
         "Governing Formulas Reference",
     ],
@@ -124,7 +154,7 @@ nav_choice = st.sidebar.radio(
 
 
 # =============================================================================
-# SECTION 1: PLATFORM OVERVIEW (CLEAR & ACCESSIBLE)
+# SECTION 1: PLATFORM OVERVIEW
 # =============================================================================
 if nav_choice == "Platform Overview":
     st.markdown("### What This Application Helps You Achieve")
@@ -161,8 +191,8 @@ if nav_choice == "Platform Overview":
         st.markdown(
             """
         <div class="card-box">
-            <div class="card-title">3. Green Energy & Carbon Savings Estimation</div>
-            <div class="card-text">Translate turbine power output into clean electricity potential. Evaluate how micro-hydro installations replace fossil-fuel power generation and calculate estimated metric tons of CO₂ offset per year.</div>
+            <div class="card-title">3. Comprehensive Characteristic Curves</div>
+            <div class="card-text">Visualize multi-graph interactions including Brake Power vs. Efficiency, Torque vs. RPM, and Shaft Power across speed ratios under variable heads and nozzle geometries.</div>
         </div>
         """,
             unsafe_allow_html=True,
@@ -171,8 +201,8 @@ if nav_choice == "Platform Overview":
         st.markdown(
             """
         <div class="card-box">
-            <div class="card-title">4. Parametric Loss Breakdown</div>
-            <div class="card-text">Visualize where energy is lost across the system—separating hydraulic nozzle friction, bucket deflection losses, and mechanical windage into interactive pie charts.</div>
+            <div class="card-title">4. Green Energy & Carbon Savings Estimation</div>
+            <div class="card-text">Translate turbine power output into clean electricity potential. Evaluate how micro-hydro installations replace fossil-fuel power generation and calculate estimated metric tons of CO₂ offset per year.</div>
         </div>
         """,
             unsafe_allow_html=True,
@@ -334,8 +364,8 @@ elif nav_choice == "Interactive Turbine Simulator":
             xaxis_title="Speed Ratio (ϕ = u / Vj)",
             yaxis_title="Overall Efficiency (%)",
             template="plotly_dark",
-            paper_bgcolor="#1E293B",
-            plot_bgcolor="#1E293B",
+            paper_bgcolor="#111C38",
+            plot_bgcolor="#111C38",
             height=420,
         )
         st.plotly_chart(fig, use_container_width=True)
@@ -367,7 +397,7 @@ elif nav_choice == "Interactive Turbine Simulator":
         )
         fig_pie.update_layout(
             template="plotly_dark",
-            paper_bgcolor="#1E293B",
+            paper_bgcolor="#111C38",
             height=250,
             margin=dict(t=30, b=10, l=10, r=10),
         )
@@ -375,7 +405,137 @@ elif nav_choice == "Interactive Turbine Simulator":
 
 
 # =============================================================================
-# SECTION 4: GREEN ENERGY & CARBON IMPACT
+# SECTION 4: PERFORMANCE CURVES & ANALYTICS (NEW DETAILED PLOTS)
+# =============================================================================
+elif nav_choice == "Performance Curves & Analytics":
+    st.title("📈 Performance Characteristic Curves & Analytics")
+    st.write(
+        "Analyze multi-variable relationships governing Pelton turbine operation, including Brake Power vs. Efficiency, Torque vs. Speed, and Head Sensitivity."
+    )
+
+    st.sidebar.markdown("### ⚙️ Operating Baseline")
+    p_head = st.sidebar.slider("Net Head, H (m)", 10.0, 100.0, 45.0, 5.0)
+    p_d_nozzle = (
+        st.sidebar.slider("Nozzle Diameter, d (mm)", 10.0, 50.0, 24.0, 2.0)
+        / 1000.0
+    )
+    p_d_runner = st.sidebar.slider(
+        "Runner Diameter, D (m)", 0.20, 1.00, 0.45, 0.05
+    )
+
+    v_j = 0.97 * np.sqrt(2 * G * p_head)
+    q_val = (np.pi / 4.0) * (p_d_nozzle**2) * v_j
+    p_hyd_val = RHO * G * q_val * p_head  # Watts
+
+    phi_arr = np.linspace(0.05, 0.90, 80)
+    u_arr = phi_arr * v_j
+    rpm_arr = (u_arr * 60.0) / (np.pi * p_d_runner)
+
+    p_brake_arr = (
+        RHO * q_val * u_arr * (v_j - u_arr) * (1 + 0.90 * 0.96) * 0.92
+    )  # Watts
+    eff_arr = (p_brake_arr / p_hyd_val) * 100.0
+    torque_arr = p_brake_arr / (2 * np.pi * (rpm_arr / 60.0))
+
+    col_g1, col_g2 = st.columns(2)
+
+    with col_g1:
+        # 1. Brake Power vs Efficiency Plot
+        fig_bp_eff = go.Figure()
+        fig_bp_eff.add_trace(
+            go.Scatter(
+                x=p_brake_arr / 1000.0,
+                y=eff_arr,
+                mode="lines+markers",
+                name="Efficiency vs. Power",
+                line=dict(color="#10B981", width=3.5),
+                marker=dict(size=5),
+            )
+        )
+        fig_bp_eff.update_layout(
+            title="Brake Power (kW) vs. Overall Efficiency (%)",
+            xaxis_title="Brake Power Output (kW)",
+            yaxis_title="Overall Efficiency (%)",
+            template="plotly_dark",
+            paper_bgcolor="#111C38",
+            plot_bgcolor="#111C38",
+            height=380,
+        )
+        st.plotly_chart(fig_bp_eff, use_container_width=True)
+
+        # 2. Torque vs Rotational Speed (RPM)
+        fig_torque = go.Figure()
+        fig_torque.add_trace(
+            go.Scatter(
+                x=rpm_arr,
+                y=torque_arr,
+                mode="lines",
+                name="Torque (N·m)",
+                line=dict(color="#F59E0B", width=3.5),
+            )
+        )
+        fig_torque.update_layout(
+            title="Brake Torque (N·m) vs. Rotational Speed (RPM)",
+            xaxis_title="Runner Rotational Speed (RPM)",
+            yaxis_title="Brake Torque (N·m)",
+            template="plotly_dark",
+            paper_bgcolor="#111C38",
+            plot_bgcolor="#111C38",
+            height=380,
+        )
+        st.plotly_chart(fig_torque, use_container_width=True)
+
+    with col_g2:
+        # 3. Brake Power Output vs Rotational Speed (RPM)
+        fig_bp_rpm = go.Figure()
+        fig_bp_rpm.add_trace(
+            go.Scatter(
+                x=rpm_arr,
+                y=p_brake_arr / 1000.0,
+                mode="lines",
+                name="Brake Power (kW)",
+                line=dict(color="#38BDF8", width=3.5),
+            )
+        )
+        fig_bp_rpm.update_layout(
+            title="Brake Power (kW) vs. Rotational Speed (RPM)",
+            xaxis_title="Runner Rotational Speed (RPM)",
+            yaxis_title="Brake Power Output (kW)",
+            template="plotly_dark",
+            paper_bgcolor="#111C38",
+            plot_bgcolor="#111C38",
+            height=380,
+        )
+        st.plotly_chart(fig_bp_rpm, use_container_width=True)
+
+        # 4. Multi-Head Parametric Comparison (Power curves across Heads)
+        fig_heads = go.Figure()
+        heads_test = [20.0, 35.0, 50.0, 65.0]
+        for h_t in heads_test:
+            v_t = 0.97 * np.sqrt(2 * G * h_t)
+            q_t = (np.pi / 4.0) * (p_d_nozzle**2) * v_t
+            p_b_t = RHO * q_t * (phi_arr * v_t) * (v_t - phi_arr * v_t) * 1.78 / 1000.0
+            rpm_t = (phi_arr * v_t * 60.0) / (np.pi * p_d_runner)
+            fig_heads.add_trace(
+                go.Scatter(
+                    x=rpm_t, y=p_b_t, mode="lines", name=f"Head H = {h_t:.0f} m"
+                )
+            )
+
+        fig_heads.update_layout(
+            title="Power Curves across Operating Heads (H)",
+            xaxis_title="Runner Rotational Speed (RPM)",
+            yaxis_title="Brake Power (kW)",
+            template="plotly_dark",
+            paper_bgcolor="#111C38",
+            plot_bgcolor="#111C38",
+            height=380,
+        )
+        st.plotly_chart(fig_heads, use_container_width=True)
+
+
+# =============================================================================
+# SECTION 5: GREEN ENERGY & CARBON IMPACT
 # =============================================================================
 elif nav_choice == "Green Energy & Carbon Impact":
     st.title("🌱 Green Energy & Clean Hydro-Power Impact")
@@ -425,7 +585,7 @@ elif nav_choice == "Green Energy & Carbon Impact":
 
 
 # =============================================================================
-# SECTION 5: GOVERNING FORMULAS REFERENCE
+# SECTION 6: GOVERNING FORMULAS REFERENCE
 # =============================================================================
 elif nav_choice == "Governing Formulas Reference":
     st.title("Formulas, Symbols & Definitions Table")

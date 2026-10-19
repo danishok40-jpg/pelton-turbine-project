@@ -8,7 +8,7 @@ import streamlit as st
 # PAGE CONFIGURATION & REALISTIC SOFTWARE THEME
 # -----------------------------------------------------------------------------
 st.set_page_config(
-    page_title="HYDRO-JET | Impulse Turbine Analysis Suite",
+    page_title="Pelton Turbine Performance & Hydrodynamics Simulator",
     page_icon="⚙️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -37,7 +37,7 @@ st.markdown(
         box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
     .app-header-title {
-        font-size: 1.8rem;
+        font-size: 1.7rem;
         font-weight: 800;
         color: #38BDF8;
         margin: 0;
@@ -104,8 +104,8 @@ st.markdown(
             <path d="M 50 15 L 50 25 M 85 50 L 75 50 M 50 85 L 50 75 M 15 50 L 25 50" stroke="#F59E0B" stroke-width="4" stroke-linecap="round"/>
         </svg>
         <div>
-            <div class="app-header-title">HYDRO-JET OPTIMIZER</div>
-            <div class="app-header-sub">Fluid Dynamics Performance Analysis & Hydro-Turbine Simulation Platform</div>
+            <div class="app-header-title">Pelton Turbine Performance & Hydrodynamics Simulator</div>
+            <div class="app-header-sub">Fluid Mechanics Analysis, Load-RPM Coupling, and Jet Kinematics Modeling</div>
         </div>
     </div>
 """,
@@ -131,9 +131,9 @@ nav_choice = st.sidebar.radio(
 # SECTION 1: PLATFORM OVERVIEW
 # =============================================================================
 if nav_choice == "Platform Overview":
-    st.markdown("### Application Capabilities & Workflow")
+    st.markdown("### Application Capabilities & Hydrodynamic Workflow")
     st.write(
-        "HYDRO-JET provides engineering calculations and real-time numerical modeling for Pelton impulse hydro-turbines."
+        "This application models a Pelton Impulse Hydro-Turbine where **rotor speed (RPM) is restricted and dynamically governed by fluid momentum and applied mechanical brake loads**."
     )
 
     st.write("")
@@ -144,8 +144,8 @@ if nav_choice == "Platform Overview":
         st.markdown(
             """
         <div class="card-box">
-            <div class="card-title">1. Automated Laboratory Data Processing</div>
-            <div class="card-text">Processes physical readings (tachometer speed, spring balance loads, water collection volume, and inlet pressure) to compute net brake force, volumetric flow rate, torque, shaft power, and overall conversion efficiency.</div>
+            <div class="card-title">1. Fluid Properties & Load-Coupled RPM</div>
+            <div class="card-text">Instead of treating RPM as an arbitrary user input, the simulator models rotor speed as a direct result of fluid momentum torque balance against applied brake forces (<i>W₂ - W₁</i>).</div>
         </div>
         """,
             unsafe_allow_html=True,
@@ -154,8 +154,8 @@ if nav_choice == "Platform Overview":
         st.markdown(
             """
         <div class="card-box">
-            <div class="card-title">2. Hydrodynamic Nozzle & Speed Optimizer</div>
-            <div class="card-text">Simulates operating head, nozzle diameter, pitch diameter, and jet coefficients to determine peak efficiency points and optimal speed ratios.</div>
+            <div class="card-title">2. Nozzle Jet Kinematics & BEP</div>
+            <div class="card-text">Calculates theoretical jet velocity (<i>Vⱼ = Cᵥ √(2gH)</i>), bucket relative velocities, and speed ratios (<i>ϕ = u / Vⱼ</i>) to locate peak turbine conversion efficiency.</div>
         </div>
         """,
             unsafe_allow_html=True,
@@ -165,8 +165,8 @@ if nav_choice == "Platform Overview":
         st.markdown(
             """
         <div class="card-box">
-            <div class="card-title">3. Characteristic Performance Curves</div>
-            <div class="card-text">Generates interactive plots including Power vs. Efficiency, Torque vs. RPM, and multi-head parametric curves.</div>
+            <div class="card-title">3. Characteristic Performance Analytics</div>
+            <div class="card-text">Generates live curves for Brake Power vs. Efficiency, Torque vs. RPM, and Power vs. Speed across varying head pressures and nozzle dimensions.</div>
         </div>
         """,
             unsafe_allow_html=True,
@@ -175,8 +175,8 @@ if nav_choice == "Platform Overview":
         st.markdown(
             """
         <div class="card-box">
-            <div class="card-title">4. Renewable Energy Impact Modeling</div>
-            <div class="card-text">Calculates estimated annual electrical energy yields and carbon emission offsets for run-of-river micro-hydro installations.</div>
+            <div class="card-title">4. Renewable Energy Modeling</div>
+            <div class="card-text">Translates shaft power into annual clean electrical output (<i>kWh/year</i>) and metric tons of avoided carbon dioxide (<i>CO₂</i>) emissions.</div>
         </div>
         """,
             unsafe_allow_html=True,
@@ -184,12 +184,12 @@ if nav_choice == "Platform Overview":
 
 
 # =============================================================================
-# SECTION 2: LABORATORY DATA CALCULATOR
+# SECTION 2: LABORATORY DATA CALCULATOR (LOAD-RESTRICTED RPM)
 # =============================================================================
 elif nav_choice == "Laboratory Data Calculator":
     st.title("Physical Test Data Calculator")
     st.write(
-        "Input measured experimental parameters to calculate turbine performance metrics."
+        "Enter measured physical parameters from your lab setup. **Rotor speed (RPM) is automatically restricted and calculated based on fluid momentum and applied mechanical brake load.**"
     )
 
     st.write("")
@@ -202,21 +202,31 @@ elif nav_choice == "Laboratory Data Calculator":
             value=0.030,
             step=0.005,
             format="%.3f",
-            help="Measured radius of drum",
-        )
-        rpm_in = st.number_input(
-            "Tachometer Speed (RPM)", value=750.0, step=10.0
+            help="Measured radius of brake drum",
         )
         p_in_N = st.number_input(
-            "Inlet Pressure, Pi (N/m² or Pa)", value=150000.0, step=5000.0
+            "Inlet Gauge Pressure, Pi (N/m² or Pa)",
+            value=150000.0,
+            step=5000.0,
+            help="Inlet pressure measured by Bourdon gauge",
+        )
+        runner_D = st.number_input(
+            "Runner Pitch Diameter, D (m)",
+            value=0.35,
+            step=0.01,
+            format="%.2f",
+            help="Pitch diameter of Pelton wheel runner",
         )
 
     with col_in2:
         w1_kg = st.number_input(
-            "Spring Balance 1, w1 (kg)", value=1.5, step=0.1
+            "Spring Balance Load 1, w1 (kg)", value=1.5, step=0.1
         )
         w2_kg = st.number_input(
-            "Spring Balance 2, w2 (kg)", value=5.2, step=0.1
+            "Spring Balance Load 2, w2 (kg)", value=5.2, step=0.1
+        )
+        cv_val = st.slider(
+            "Nozzle Velocity Coefficient, Cv", 0.90, 0.99, 0.97, 0.01
         )
 
     with col_in3:
@@ -227,39 +237,59 @@ elif nav_choice == "Laboratory Data Calculator":
             "Collection Time, T (seconds)", value=25.0, step=0.5
         )
 
-    # Core Calculations
-    N_hz = rpm_in / 60.0
+    # --- Hydrodynamic Physics Calculations ---
+    # 1. Inlet Head and Flow Rate
+    h_i = p_in_N / (RHO * G)
+    v_m3 = vol_liters / 1000.0
+    q_v = v_m3 / time_sec if time_sec > 0 else 0.0
+    p_h = RHO * G * h_i * q_v  # Hydraulic Power (Watts)
+
+    # 2. Net Brake Force & Mechanical Torque
     w1_N = w1_kg * G
     w2_N = w2_kg * G
     f_b = abs(w2_N - w1_N)
+    torque = f_b * r_drum  # Torque (N*m)
 
-    v_m3 = vol_liters / 1000.0
-    q_v = v_m3 / time_sec if time_sec > 0 else 0.0
+    # 3. Jet Velocity
+    v_jet = cv_val * np.sqrt(2 * G * h_i)
 
-    h_i = p_in_N / (RHO * G)
-    p_h = RHO * G * h_i * q_v
+    # 4. Fluid Dynamics & Equilibrium Speed (RPM Restricted to Applied Load)
+    # Wheel Force Balance: Fluid Torque = Mechanical Brake Torque
+    # T_fluid = rho * Q * (D/2) * (V_jet - u)(1 + k*cos(beta))
+    k_friction = 0.90  # Bucket friction coefficient
+    beta_rad = np.radians(15.0)  # Deflection angle relative to jet (165 deg total)
+    factor = (1.0 + k_friction * np.cos(beta_rad))
 
-    torque = f_b * r_drum
+    # Solve peripheral speed 'u' where T_fluid = torque
+    if q_v > 0 and (RHO * q_v * (runner_D / 2.0) * factor) > 0:
+        u_eq = v_jet - (torque / (RHO * q_v * (runner_D / 2.0) * factor))
+        u_eq = max(0.01, min(u_eq, 0.92 * v_jet))  # Physical bounds
+    else:
+        u_eq = 0.45 * v_jet
+
+    rpm_restricted = (u_eq * 60.0) / (np.pi * runner_D)
+    N_hz = rpm_restricted / 60.0
+
+    # 5. Shaft Power and Efficiency
     p_b = 2 * np.pi * N_hz * torque
-
     e_t = (p_b / p_h * 100.0) if p_h > 0 else 0.0
 
     st.divider()
 
-    st.markdown("### Calculated Experimental Results")
+    st.markdown("### Hydrodynamic Results (Restricted RPM governed by Load)")
 
     res1, res2, res3, res4 = st.columns(4)
     res1.metric("Net Brake Force (Fb)", f"{f_b:.2f} N")
     res2.metric("Flow Rate (Qv)", f"{q_v * 1000:.2f} L/s")
-    res3.metric("Inlet Head (Hi)", f"{h_i:.2f} mH₂O")
-    res4.metric("Brake Torque (T)", f"{torque:.3f} N·m")
+    res3.metric("Net Inlet Head (Hi)", f"{h_i:.2f} mH₂O")
+    res4.metric("Applied Brake Torque (T)", f"{torque:.3f} N·m")
 
     st.write("")
 
     res5, res6, res7, res8 = st.columns(4)
-    res5.metric("Rotor Speed (N)", f"{N_hz:.2f} Hz ({rpm_in:.0f} RPM)")
-    res6.metric("Hydraulic Power (Ph)", f"{p_h:.1f} W")
-    res7.metric("Brake Power (Pb)", f"{p_b:.1f} W")
+    res5.metric("Governed Speed (RPM)", f"{rpm_restricted:.0f} RPM ({N_hz:.2f} Hz)")
+    res6.metric("Hydraulic Input Power (Ph)", f"{p_h:.1f} W")
+    res7.metric("Brake Power Output (Pb)", f"{p_b:.1f} W")
     res8.metric("Overall Efficiency (Et)", f"{e_t:.2f} %")
 
 
@@ -269,7 +299,7 @@ elif nav_choice == "Laboratory Data Calculator":
 elif nav_choice == "Interactive Turbine Simulator":
     st.title("Interactive Turbine & Jet Simulator")
 
-    st.sidebar.markdown("### ⚙️ Operating Variables")
+    st.sidebar.markdown("### ⚙️ Fluid & Loading Inputs")
     s_head = st.sidebar.slider("Net Inlet Head, H (m)", 10.0, 120.0, 45.0, 1.0)
     s_cv = st.sidebar.slider("Velocity Coefficient, Cv", 0.90, 0.99, 0.97, 0.01)
     s_d_nozzle = (
@@ -334,8 +364,8 @@ elif nav_choice == "Interactive Turbine Simulator":
             )
         )
         fig.update_layout(
-            title="Overall Efficiency vs. Speed Ratio (ϕ)",
-            xaxis_title="Speed Ratio (ϕ = u / Vj)",
+            title="Overall Efficiency vs. Speed Ratio (ϕ = u / Vj)",
+            xaxis_title="Speed Ratio (ϕ)",
             yaxis_title="Overall Efficiency (%)",
             template="plotly_dark",
             paper_bgcolor="#1E293B",
@@ -351,7 +381,7 @@ elif nav_choice == "Interactive Turbine Simulator":
             <div class="card-title">Optimal Operating Point (BEP)</div>
             <div class="card-text">
                 • <b>Optimum Speed Ratio (ϕ):</b> {opt_phi:.2f}<br>
-                • <b>Recommended Speed:</b> {opt_rpm:.0f} RPM<br>
+                • <b>Calculated Speed:</b> {opt_rpm:.0f} RPM<br>
                 • <b>Shaft Power Output:</b> {opt_pmech / 1000.0:.2f} kW<br>
                 • <b>Jet Ratio (D/d):</b> {s_d_runner / s_d_nozzle:.1f}
             </div>
@@ -367,7 +397,7 @@ elif nav_choice == "Interactive Turbine Simulator":
             names=["Useful Power", "Hydraulic Loss", "Mechanical Loss"],
             values=[opt_pmech, loss_hyd, loss_mech],
             color_discrete_sequence=["#10B981", "#F43F5E", "#F59E0B"],
-            title="Energy Distribution at BEP",
+            title="Energy Loss Breakdown at BEP",
         )
         fig_pie.update_layout(
             template="plotly_dark",
@@ -382,9 +412,9 @@ elif nav_choice == "Interactive Turbine Simulator":
 # SECTION 4: PERFORMANCE CURVES & ANALYTICS
 # =============================================================================
 elif nav_choice == "Performance Curves & Analytics":
-    st.title("Performance Curves & Parametric Analytics")
+    st.title("Performance Curves & Load Dynamics")
     st.write(
-        "Analyze relationships between brake power, rotational speed, torque, and efficiency under varying conditions."
+        "Analyze how applied brake torque alters rotational speed (RPM), shaft power, and overall conversion efficiency."
     )
 
     st.sidebar.markdown("### ⚙️ Baseline Settings")
@@ -450,7 +480,7 @@ elif nav_choice == "Performance Curves & Analytics":
         fig_torque.update_layout(
             title="Brake Torque (N·m) vs. Speed (RPM)",
             xaxis_title="Rotational Speed (RPM)",
-            yaxis_title="Torque (N·m)",
+            yaxis_title="Brake Torque (N·m)",
             template="plotly_dark",
             paper_bgcolor="#1E293B",
             plot_bgcolor="#1E293B",
@@ -567,42 +597,35 @@ elif nav_choice == "Governing Formulas Reference":
 
     formula_data = [
         {
-            "Name": "Radius of Brake Drum",
+            "Name": "Brake Drum Radius",
             "Unit": "m",
-            "Symbol": "r / R",
+            "Symbol": "r",
             "Type": "Variable",
-            "Definition": "Radius of drum on which brake band operates.",
+            "Definition": "Measured radius of drum on which brake band operates.",
         },
         {
-            "Name": "Tachometer Reading",
-            "Unit": "RPM",
-            "Symbol": "RPM",
-            "Type": "Measured",
-            "Definition": "Rotor rotational speed measured in RPM.",
-        },
-        {
-            "Name": "Rotor Speed",
-            "Unit": "Hz",
-            "Symbol": "N",
-            "Type": "Calculated",
-            "Definition": "Rotational speed in Hertz (N = RPM / 60).",
+            "Name": "Governed Rotor Speed",
+            "Unit": "RPM / Hz",
+            "Symbol": "RPM / N",
+            "Type": "Restricted/Calculated",
+            "Definition": "Rotor rotational speed calculated from fluid torque equilibrium against applied brake load.",
         },
         {
             "Name": "Force 1",
             "Unit": "N",
             "Symbol": "w1",
-            "Type": "Measured",
+            "Type": "Measured Load",
             "Definition": "Reading from spring balance 1 (Force = kg × 9.81).",
         },
         {
             "Name": "Force 2",
             "Unit": "N",
             "Symbol": "w2",
-            "Type": "Measured",
+            "Type": "Measured Load",
             "Definition": "Reading from spring balance 2 (Force = kg × 9.81).",
         },
         {
-            "Name": "Brake Force",
+            "Name": "Net Brake Force",
             "Unit": "N",
             "Symbol": "Fb",
             "Type": "Calculated",
@@ -651,14 +674,14 @@ elif nav_choice == "Governing Formulas Reference":
             "Definition": "Ph = ρ * g * Hi * Qv",
         },
         {
-            "Name": "Torque",
+            "Name": "Applied Torque",
             "Unit": "Nm",
             "Symbol": "T",
             "Type": "Calculated",
             "Definition": "T = Fb * r",
         },
         {
-            "Name": "Brake Power",
+            "Name": "Brake Power Output",
             "Unit": "Watts",
             "Symbol": "Pb",
             "Type": "Calculated",

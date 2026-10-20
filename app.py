@@ -8,7 +8,7 @@ import streamlit as st
 # PAGE CONFIGURATION & REALISTIC SOFTWARE THEME
 # -----------------------------------------------------------------------------
 st.set_page_config(
-    page_title="Pelton Turbine Performance & Hydrodynamics Simulator",
+    page_title="Pelton Turbine Performance Optimizer",
     page_icon="⚙️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -104,7 +104,7 @@ st.markdown(
             <path d="M 50 15 L 50 25 M 85 50 L 75 50 M 50 85 L 50 75 M 15 50 L 25 50" stroke="#F59E0B" stroke-width="4" stroke-linecap="round"/>
         </svg>
         <div>
-            <div class="app-header-title">Pelton Turbine Performance & Hydrodynamics Simulator</div>
+            <div class="app-header-title">Pelton Turbine Performance Optimizer</div>
             <div class="app-header-sub">Fluid Mechanics Analysis, Load-RPM Coupling, and Jet Kinematics Modeling</div>
         </div>
     </div>
